@@ -1,7 +1,7 @@
 // const formArchetype = require('../resources/formValue.json')
 import formArchetype from '/resources/formValue.js'
 
-
+let formInputs=[]
 function makeMultipleChoice(
   {
     min,
@@ -23,7 +23,7 @@ function makeMultipleChoice(
   for(let i=min; i<=max;i++){
     let temp = document.createElement("input")
     let tempLabel = document.createElement("label")
-    tempLabel.innerText=i
+    tempLabel.innerText=`  ${i}:`
     temp.id=`${id}-${i}`
     temp.type="radio"
     temp.name=id
@@ -46,7 +46,9 @@ function makeTrueFalse({label, id}){
   container.appendChild(containerLabel)
   
   container.appendChild(box)
+
   return(container)
+
 }
 
 function main(){
@@ -54,7 +56,7 @@ function main(){
   for(let x in formArchetype.formFields){
     let target = formArchetype.formFields[x];
     let field;
-    console.log(target)
+    formInputs.push(target.id);
     if(target.type=="multiple-choice"){
       field = makeMultipleChoice(target)
     }else if(target.type=="true-false"){
@@ -62,11 +64,47 @@ function main(){
     }else{
       console.log("invalid type")
     }
-    console.log(field.childNodes)
     targetForm.appendChild(field)
 
     //add page break during development
     targetForm.appendChild(document.createElement("br"))
   }
 }
+
+const survey = document.getElementById('survey')
+const subButton = document.getElementById("sub")
+
+
+function saveData(data){
+  const request = new Request(`http://localhost:3000/sub`,{
+    method:"POST",
+    body:JSON.stringify(data),
+    mode:'cors',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
+  fetch(request)
+}
+
+
+survey.addEventListener("submit",(e)=>{
+  let data={}
+  formInputs.forEach(i=>{
+    //this filters out checkboxes
+    if(survey[i].value=="true"){
+      data[i]=survey[i].checked;
+    }else{
+      if(survey[i].value){
+        data[i]= survey[i].value;
+      }else{
+        data[i]=0
+      }
+    }
+
+  })
+  console.log(JSON.stringify(data))
+  saveData(data)
+})
 main()
+
