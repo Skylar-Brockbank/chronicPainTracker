@@ -76,7 +76,7 @@ const subButton = document.getElementById("sub")
 
 
 function saveData(data){
-  const request = new Request(`http://localhost:3000/sub`,{
+  const request = new Request(`http://${process.env.address}/sub`,{
     method:"POST",
     body:JSON.stringify(data),
     mode:'cors',
