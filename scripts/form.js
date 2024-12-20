@@ -89,6 +89,7 @@ function saveData(data){
 
 
 survey.addEventListener("submit",(e)=>{
+  e.preventDefault()
   let data={}
   formInputs.forEach(i=>{
     //this filters out checkboxes
