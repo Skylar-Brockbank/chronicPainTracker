@@ -76,7 +76,7 @@ const subButton = document.getElementById("sub")
 
 
 function saveData(data){
-  const request = new Request(`http://${process.env.address}/sub`,{
+  const request = new Request(`http://67.183.205.250/sub`,{
     method:"POST",
     body:JSON.stringify(data),
     mode:'cors',
